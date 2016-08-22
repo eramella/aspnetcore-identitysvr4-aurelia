@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Test Mail";
+}
+<h1>Test Mail</h1>
+<div>
+    <form asp-controller="MailTest" asp-action="Send" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-default">Send Email Test</button>
+            </div>
+        </div>
+    </form>
+</div>
