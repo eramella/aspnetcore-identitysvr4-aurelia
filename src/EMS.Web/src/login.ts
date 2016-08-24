@@ -1,6 +1,3 @@
-/// <reference path="../node_modules/oidc-client/oidc-client.d.ts" />
-
-
 import { UserManager } from 'oidc-client';
 import { inject } from 'aurelia-framework'
 

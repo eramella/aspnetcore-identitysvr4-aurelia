@@ -8,5 +8,8 @@
     "jasmine": "registry:dt/jasmine#2.2.0+20160505161446",
     "node": "registry:dt/node",
     "selenium-webdriver": "registry:dt/selenium-webdriver#2.44.0+20160317120654"
+  },
+  "globalDependencies": {
+    "oidc-client": "file:./node_modules/oidc-client/oidc-client.d.ts"
   }
 }
