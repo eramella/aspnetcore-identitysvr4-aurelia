@@ -51,7 +51,7 @@ define('login',["require", "exports", 'aurelia-framework'], function (require, e
             this.settings = {
                 authority: "http://localhost:1861",
                 client_id: "ems",
-                redirect_uri: "http://localhost:1861/index.html#callback",
+                redirect_uri: "http://localhost:1861/callback.html",
                 response_type: "id_token token",
                 scope: "openid profile api.todo"
             };

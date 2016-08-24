@@ -22,22 +22,10 @@ let serve = gulp.series(
       open: false,
       port: 9000,
       proxy: {
-        target: 'http://localhost:1861',
-        proxyReq: [
-          function (proxyReq) {
-            console.log(proxyReq);
-            //proxyReq.setHeader('X-Special-Proxy-Header', 'foobar');
-          }
+        target: 'http://localhost:1861'        
         ]
       },
-      logLevel: 'debug',
-      // server: {
-      //   baseDir: ['.'],
-      //   middleware: [historyApiFallback(), function(req, res, next) {
-      //    res.setHeader('Access-Control-Allow-Origin', '*');
-      //     next();
-      //   }]
-      // }
+      logLevel: 'debug'
     }, function (err, bs) {
       let urls = bs.options.get('urls').toJS();
       console.log(`Application Available At: ${urls.local}`);
