@@ -1,8 +1,8 @@
 {
   "resolution": "main",
   "tree": {
-    "src": "c:\\Dev\\Github\\aspnetcore-identitysvr4-aurelia\\src\\EMS.Web\\node_modules\\oidc-client\\oidc-client.d.ts",
+    "src": "d:\\GitHub\\aspnetcore-identitysvr4-aurelia\\src\\EMS.Web\\node_modules\\oidc-client\\oidc-client.d.ts",
     "raw": "file:./node_modules/oidc-client/oidc-client.d.ts",
-    "typings": "c:\\Dev\\Github\\aspnetcore-identitysvr4-aurelia\\src\\EMS.Web\\node_modules\\oidc-client\\oidc-client.d.ts"
+    "typings": "d:\\GitHub\\aspnetcore-identitysvr4-aurelia\\src\\EMS.Web\\node_modules\\oidc-client\\oidc-client.d.ts"
   }
 }

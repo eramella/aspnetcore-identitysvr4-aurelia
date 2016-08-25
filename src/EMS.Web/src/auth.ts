@@ -1,18 +1,23 @@
 import { UserManager } from 'oidc-client';
 import {Router, Redirect} from 'aurelia-router';
+import {inject, singleton} from 'aurelia-framework';
 
+//@singleton
+@inject(Router)
 export class Auth {
     oidcUserManager: UserManager;
+    router : Router;
     user: Oidc.User;
     settings: Oidc.UserManagerCtor = {
         authority: "http://localhost:1861",
         client_id: "ems",
-        redirect_uri: "http://localhost:1861/callback.html",
+        redirect_uri: "http://localhost:1861/index.html",
         response_type: "id_token token",
         scope: "openid profile api.todo"
     };
 
-    constructor() {
+    constructor(router) {
+        this.router = router;
         this.oidcUserManager = new UserManager(this.settings);
         console.log("Auth contructor");
         let that = this;
@@ -29,7 +34,7 @@ export class Auth {
 
     login() {
         console.log("auth login");
-        return this.oidcUserManager.signinRedirect().then(function () {
+        this.oidcUserManager.signinRedirect().then(function () {
             console.log("redirecting for login...");
         })
             .catch(function (er) {
@@ -39,14 +44,16 @@ export class Auth {
 
     callback(){
         console.log("auth callback");
-        return this.oidcUserManager.signinRedirectCallback().then(function (callBackUser) {
+        let that = this;
+        this.oidcUserManager.signinRedirectCallback().then(function (callBackUser) {
             if (callBackUser == null) {
                 console.error("No sign-in request pending.");
-                new Redirect('http://localhost:1861/login');
+                new Redirect('http://localhost:1861/account/login');
             }
             else {
-                console.log('callback user found and confirmed')
-                new Redirect('home');
+                console.log('callback user found and confirmed');
+                //that.router.navigate('home');
+                window.location.href = '/index.html#home';
             }
         })
         .catch(function (er) {
