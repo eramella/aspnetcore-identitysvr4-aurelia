@@ -20,7 +20,7 @@ namespace EMS.Web.Configuration
                     RequireConsent = false,
                     RedirectUris = new List<string>
                     {
-                        "http://localhost:1861/index.html"
+                        "http://localhost:1861/spa/callback.html"
                     },
                     AllowedScopes = new List<string>
                     {

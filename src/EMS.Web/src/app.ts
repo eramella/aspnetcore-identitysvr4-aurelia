@@ -7,8 +7,8 @@ export class App {
         config.title = 'Asp.net Core - IdentitySvr4 - Aurelia';
         //config.addPipelineStep('authorize', AuthorizeStep);
         config.map([
-            { route: ['', 'home'], name: 'home', moduleId: 'home' },
-            { route: 'login', name: 'login', moduleId: 'login' }
+            { route: ['', 'home'], name: 'home', moduleId: 'home' }
+            //{ route: 'login', name: 'login', moduleId: 'login' }
         ]);
     }
 }

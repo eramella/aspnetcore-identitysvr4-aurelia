@@ -14,28 +14,30 @@ define('auth',["require", "exports", 'aurelia-router', 'aurelia-framework'], fun
             this.settings = {
                 authority: "http://localhost:1861",
                 client_id: "ems",
-                redirect_uri: "http://localhost:1861/index.html",
+                redirect_uri: "http://localhost:1861/spa/callback.html",
                 response_type: "id_token token",
                 scope: "openid profile api.todo"
             };
             this.router = router;
             this.oidcUserManager = new UserManager(this.settings);
             console.log("Auth contructor");
-            var that = this;
-            this.oidcUserManager.getUser().then(function (u) {
+        }
+        Auth.prototype.loadLocalUser = function () {
+            return this.oidcUserManager.getUser().then(function (u) {
                 if (u) {
                     console.log("User loaded", u);
-                    that.user = u;
+                    return u;
                 }
                 else {
                     console.log("no user loaded");
                 }
             });
-        }
+        };
         Auth.prototype.login = function () {
             console.log("auth login");
             this.oidcUserManager.signinRedirect().then(function () {
                 console.log("redirecting for login...");
+                debugger;
             })
                 .catch(function (er) {
                 console.log("Sign-in error", er);
@@ -43,16 +45,18 @@ define('auth',["require", "exports", 'aurelia-router', 'aurelia-framework'], fun
         };
         Auth.prototype.callback = function () {
             console.log("auth callback");
+            debugger;
             var that = this;
-            this.oidcUserManager.signinRedirectCallback().then(function (callBackUser) {
+            return this.oidcUserManager.signinRedirectCallback().then(function (callBackUser) {
                 if (callBackUser == null) {
                     console.error("No sign-in request pending.");
-                    new aurelia_router_1.Redirect('http://localhost:1861/account/login');
                 }
                 else {
                     console.log('callback user found and confirmed');
-                    window.location.href = '/index.html#home';
+                    debugger;
+                    window.location.href = 'index.html';
                 }
+                return callBackUser;
             })
                 .catch(function (er) {
                 console.error(er.message);
@@ -80,8 +84,7 @@ define('app',["require", "exports"], function (require, exports) {
         App.prototype.configureRouter = function (config, router) {
             config.title = 'Asp.net Core - IdentitySvr4 - Aurelia';
             config.map([
-                { route: ['', 'home'], name: 'home', moduleId: 'home' },
-                { route: 'login', name: 'login', moduleId: 'login' }
+                { route: ['', 'home'], name: 'home', moduleId: 'home' }
             ]);
         };
         return App;
@@ -152,24 +155,32 @@ define('main',["require", "exports", './environment', './auth'], function (requi
         }
     });
     function configure(aurelia) {
+        aurelia.use.singleton(auth_1.Auth);
         aurelia.use
             .standardConfiguration()
             .feature('resources');
         if (environment_1.default.debug) {
             aurelia.use.developmentLogging();
         }
-        if (environment_1.default.testing) {
-            aurelia.use.plugin('aurelia-testing');
-        }
+        console.log('IM HERE');
         aurelia.start().then(function () {
             var auth = aurelia.container.get(auth_1.Auth);
-            if (aurelia.host.baseURI.indexOf('#id_token') > -1) {
-                auth.callback();
-            }
-            else {
-                var root = auth.isAuthenticated() ? 'home' : 'login';
-                aurelia.setRoot(root);
-            }
+            auth.loadLocalUser().then(function (user) {
+                if (user) {
+                    console.log(user);
+                    auth.user = user;
+                    aurelia.setRoot();
+                }
+                else {
+                    if (aurelia.host.baseURI.indexOf('#id_token') > -1) {
+                        console.log('is callback');
+                    }
+                    else {
+                        console.log('need login');
+                        auth.login();
+                    }
+                }
+            });
         });
     }
     exports.configure = configure;

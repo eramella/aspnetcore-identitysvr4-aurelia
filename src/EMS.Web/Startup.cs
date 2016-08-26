@@ -47,13 +47,14 @@ namespace EMS.Web
         public void ConfigureServices(IServiceCollection services)
         {
             var cert = new X509Certificate2(Path.Combine(Environment.ContentRootPath, "idsrvtest.pfx"), "idsrv3test");
-            var builder = services.AddIdentityServer(options=>
+            var builder = services.AddIdentityServer(options =>
             {
                 options.AuthenticationOptions.AuthenticationScheme = "Cookies";
             })
             .AddInMemoryClients(Clients.Get())
             .AddInMemoryScopes(Scopes.Get())
-            .SetSigningCredential(cert);
+            .SetTemporarySigningCredential();
+            //.SetSigningCredential(cert);
 
             services.AddTransient<IProfileService, AspIdProfileService>();
 
