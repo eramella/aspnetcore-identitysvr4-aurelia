@@ -12,7 +12,7 @@ namespace EMS.Web.Controllers
     {
         public IActionResult Index()
         {
-            return Redirect("~/index.html");
+            return Redirect("~/spa/index.html");
         }
 
         public IActionResult Error()

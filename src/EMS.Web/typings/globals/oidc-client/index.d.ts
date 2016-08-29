@@ -45,7 +45,7 @@ declare namespace Oidc {
         reset();
 
         level(value);
-
+        
         logger(value);
 
         info(...args);

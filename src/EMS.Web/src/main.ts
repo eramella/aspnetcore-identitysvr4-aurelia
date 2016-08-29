@@ -9,9 +9,8 @@ import { Auth } from './auth';
     wForgottenReturn: false
   }
 });
-//kjh
+
 export function configure(aurelia: Aurelia) {
-  aurelia.use.singleton(Auth);
   aurelia.use
     .standardConfiguration()
     .feature('resources');
@@ -29,16 +28,9 @@ export function configure(aurelia: Aurelia) {
         aurelia.setRoot();
       } else {
         if (aurelia.host.baseURI.indexOf('#id_token') > -1) {
-          console.log('is callback');
-          //auth.callback();
-          // .then(u => {
-          //   if (u) aurelia.setRoot('home');
-          // });
+          console.info('Oidc: is callback');
+          auth.callback();
         } else {
-          console.log('need login');
-          // if (auth.isAuthenticated()) {
-          //   aurelia.setRoot();
-          // }
           auth.login();
         }
       }

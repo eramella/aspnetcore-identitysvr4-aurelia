@@ -7,56 +7,50 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-define('auth',["require", "exports", 'aurelia-router', 'aurelia-framework'], function (require, exports, aurelia_router_1, aurelia_framework_1) {
+define('auth',["require", "exports", 'aurelia-framework'], function (require, exports, aurelia_framework_1) {
     "use strict";
     var Auth = (function () {
-        function Auth(router) {
+        function Auth() {
             this.settings = {
                 authority: "http://localhost:1861",
                 client_id: "ems",
-                redirect_uri: "http://localhost:1861/spa/callback.html",
+                redirect_uri: "http://localhost:1861/index.html",
                 response_type: "id_token token",
                 scope: "openid profile api.todo"
             };
-            this.router = router;
             this.oidcUserManager = new UserManager(this.settings);
-            console.log("Auth contructor");
         }
         Auth.prototype.loadLocalUser = function () {
             return this.oidcUserManager.getUser().then(function (u) {
                 if (u) {
-                    console.log("User loaded", u);
+                    console.info("Oidc: User loaded", u);
                     return u;
                 }
                 else {
-                    console.log("no user loaded");
+                    console.info("Oidc: no user loaded");
                 }
             });
         };
         Auth.prototype.login = function () {
-            console.log("auth login");
             this.oidcUserManager.signinRedirect().then(function () {
-                console.log("redirecting for login...");
-                debugger;
+                console.info("Oidc: redirecting for login...");
             })
                 .catch(function (er) {
-                console.log("Sign-in error", er);
+                console.info("Oidc: Sign-in error", er);
             });
         };
         Auth.prototype.callback = function () {
-            console.log("auth callback");
-            debugger;
+            console.info("Oidc: auth callback");
             var that = this;
             return this.oidcUserManager.signinRedirectCallback().then(function (callBackUser) {
                 if (callBackUser == null) {
-                    console.error("No sign-in request pending.");
+                    console.error("Oidc: No sign-in request pending.");
+                    window.location.href = 'http://localhost:1861/account/login';
                 }
                 else {
-                    console.log('callback user found and confirmed');
-                    debugger;
-                    window.location.href = 'index.html';
+                    console.info('Oidc: callback user found and confirmed');
+                    window.location.href = 'http://localhost:1861/index.html';
                 }
-                return callBackUser;
             })
                 .catch(function (er) {
                 console.error(er.message);
@@ -68,8 +62,8 @@ define('auth',["require", "exports", 'aurelia-router', 'aurelia-framework'], fun
             return false;
         };
         Auth = __decorate([
-            aurelia_framework_1.inject(aurelia_router_1.Router), 
-            __metadata('design:paramtypes', [Object])
+            aurelia_framework_1.autoinject, 
+            __metadata('design:paramtypes', [])
         ], Auth);
         return Auth;
     }());
@@ -111,11 +105,28 @@ define('environment',["require", "exports"], function (require, exports) {
     };
 });
 
-define('home',["require", "exports"], function (require, exports) {
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+define('home',["require", "exports", './auth', 'aurelia-framework'], function (require, exports, auth_1, aurelia_framework_1) {
     "use strict";
     var Home = (function () {
-        function Home() {
+        function Home(auth) {
+            this.auth = auth;
         }
+        Home.prototype.activate = function () {
+            this.user = JSON.stringify(this.auth.user);
+        };
+        Home = __decorate([
+            aurelia_framework_1.autoinject, 
+            __metadata('design:paramtypes', [auth_1.Auth])
+        ], Home);
         return Home;
     }());
     exports.Home = Home;
@@ -155,7 +166,6 @@ define('main',["require", "exports", './environment', './auth'], function (requi
         }
     });
     function configure(aurelia) {
-        aurelia.use.singleton(auth_1.Auth);
         aurelia.use
             .standardConfiguration()
             .feature('resources');
@@ -173,10 +183,10 @@ define('main',["require", "exports", './environment', './auth'], function (requi
                 }
                 else {
                     if (aurelia.host.baseURI.indexOf('#id_token') > -1) {
-                        console.log('is callback');
+                        console.info('Oidc: is callback');
+                        auth.callback();
                     }
                     else {
-                        console.log('need login');
                         auth.login();
                     }
                 }
@@ -195,6 +205,6 @@ define('resources/index',["require", "exports"], function (require, exports) {
 
 define('text!app.html', ['module'], function(module) { module.exports = "<template>\r\n  <router-view></router-view>\r\n</template>\r\n"; });
 define('text!callback.html', ['module'], function(module) { module.exports = "<template>\r\n    <h1>Callback</h1>    \r\n</template>"; });
-define('text!home.html', ['module'], function(module) { module.exports = "<template> \r\n    <h1>Home</h1>\r\n</template>"; });
+define('text!home.html', ['module'], function(module) { module.exports = "<template> \r\n    <h1>Home</h1>\r\n    <pre>${user}</pre>\r\n</template>"; });
 define('text!login.html', ['module'], function(module) { module.exports = "<template>\r\n    <h1>Login</h1>\r\n    <button type=\"button\" click.trigger=\"login()\">Log in</button>\r\n</template>"; });
 //# sourceMappingURL=app-bundle.js.map
