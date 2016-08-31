@@ -1,10 +1,11 @@
 {
-  "name": "aurelia-app",
+  "name": "EMS.Web",
   "type": "project:application",
   "platform": {
-    "id": "web",
-    "displayName": "Web",
-    "output": "scripts"
+    "id": "aspnetcore",
+    "displayName": "ASP.NET Core",
+    "output": "wwwroot\\scripts",
+    "baseUrl": "scripts"
   },
   "transpiler": {
     "id": "typescript",
@@ -22,28 +23,35 @@
     "fileExtension": ".html",
     "source": "src\\**\\*.html"
   },
+  "cssProcessor":{
+    "id":"none",
+    "displayName":"None",
+    "fileExtension":".css",
+    "source": "src\\**\\*.css"
+  },
   "editor": {
     "id": "vscode",
     "displayName": "Visual Studio Code"
   },
   "unitTestRunner": {
-    "id": "karma",
-    "displayName": "Karma",
-    "source": "test\\unit\\**\\*.ts"
+    "id": "non",
+    "displayName": "non"
   },
   "paths": {
-    "root": "src"
-  },
-  "testFramework": {
-    "id": "jasmine",
-    "displayName": "Jasmine"
+    "root": "src",
+    "resources":"src\\resources",
+    "elements": "src\\resources\\elements",
+    "attributes": "src\\resources\\attributes",
+    "valueConverters": "src\\resources\\value-converters",
+    "bindingBehaviors": "src\\resources\\binding-behaviors"
   },
   "build": {
     "targets": [
       {
-        "id": "web",
-        "displayName": "Web",
-        "output": "scripts"
+        "id": "aspnetcore",
+        "displayName": "ASP>NET Core",
+        "output": "wwwwroot\\scripts",
+        "baseUrl": "scripts"
       }
     ],
     "loader": {
@@ -62,7 +70,7 @@
       ]
     },
     "options": {
-      "minify": "prod",
+      "minify": "stage & prod",
       "sourcemaps": "dev & stage"
     },
     "bundles": [
@@ -90,7 +98,7 @@
         "name": "vendor-bundle.js",
         "prepend": [
           "node_modules/bluebird/js/browser/bluebird.core.js",
-          "node_modules/requirejs/require.js"
+          "wwwroot\\scripts/require.js"
         ],
         "dependencies": [
           "aurelia-binding",
@@ -115,8 +123,10 @@
           "aurelia-task-queue",
           "aurelia-templating",
           "aurelia-templating-binding",
-          "aurelia-templating-resources",
-          "text",
+          { 
+            "name": "text",
+            "path": "../wwwroot\\scripts/text"
+          },
           {
             "name": "aurelia-templating-resources",
             "path": "../node_modules/aurelia-templating-resources/dist/amd",
@@ -132,6 +142,11 @@
             "path": "../node_modules/aurelia-testing/dist/amd",
             "main": "aurelia-testing",
             "env": "dev"
+          },
+          {
+            "name": "oidc-client",
+            "path": "../node_modules/oidc-client/lib/",
+            "main": "oidc-client"
           }
         ]
       }
