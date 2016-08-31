@@ -3,7 +3,6 @@
 // Definitions by: Enrapt <https://github.com/Enrapt>, Kirill Grishin <https://github.com/KirillGrishin>
 
 // Extend existing interfaces with additional functionality from Aurelia Protractor Extender (aurelia.protractor.js)
-
 declare module protractor {
   interface IBrowser extends protractor.Protractor {
     loadAndWaitForAureliaPage(url: string): protractor.Protractor;

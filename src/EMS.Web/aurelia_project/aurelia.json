@@ -1,11 +1,10 @@
 {
-  "name": "EMS.Web",
+  "name": "aurelia-app",
   "type": "project:application",
   "platform": {
-    "id": "aspnetcore",
-    "displayName": "ASP.NET Core",
-    "output": "wwwroot\\scripts",
-    "baseUrl": "scripts"
+    "id": "web",
+    "displayName": "Web",
+    "output": "scripts"
   },
   "transpiler": {
     "id": "typescript",
@@ -23,35 +22,28 @@
     "fileExtension": ".html",
     "source": "src\\**\\*.html"
   },
-  "cssProcessor": {
-    "id": "none",
-    "displayName": "None",
-    "fileExtension": ".css",
-    "source": "src\\**\\*.css"
-  },
   "editor": {
-    "id": "visualstudio",
-    "displayName": "Visual Studio"
+    "id": "vscode",
+    "displayName": "Visual Studio Code"
   },
   "unitTestRunner": {
-    "id": "none",
-    "displayName": "None"
+    "id": "karma",
+    "displayName": "Karma",
+    "source": "test\\unit\\**\\*.ts"
   },
   "paths": {
-    "root": "src",
-    "resources": "src\\resources",
-    "elements": "src\\resources\\elements",
-    "attributes": "src\\resources\\attributes",
-    "valueConverters": "src\\resources\\value-converters",
-    "bindingBehaviors": "src\\resources\\binding-behaviors"
+    "root": "src"
+  },
+  "testFramework": {
+    "id": "jasmine",
+    "displayName": "Jasmine"
   },
   "build": {
     "targets": [
       {
-        "id": "aspnetcore",
-        "displayName": "ASP.NET Core",
-        "output": "wwwroot\\scripts",
-        "baseUrl": "scripts"
+        "id": "web",
+        "displayName": "Web",
+        "output": "scripts"
       }
     ],
     "loader": {
@@ -70,23 +62,35 @@
       ]
     },
     "options": {
-      "minify": "stage & prod",
+      "minify": "prod",
       "sourcemaps": "dev & stage"
     },
     "bundles": [
       {
+        "name": "open-id-bundle.js",
+        "source": [
+          "**/src/open-id/*.js"
+        ],
+        "dependencies": [
+          "oidc-client",
+          {
+            "name": "jwt-decode",
+            "path": "../node_modules/jwt-decode/lib",
+            "main": "index"
+          }
+        ]
+      },
+      {
         "name": "app-bundle.js",
         "source": [
-          "[**/*.js]",
-          "**/*.{css,html}"
+          "**/src/*.{js,html}"
         ]
       },
       {
         "name": "vendor-bundle.js",
         "prepend": [
           "node_modules/bluebird/js/browser/bluebird.core.js",
-          "node_modules/oidc-client/lib/oidc-client.js",
-          "wwwroot\\scripts/require.js"
+          "node_modules/requirejs/require.js"
         ],
         "dependencies": [
           "aurelia-binding",
@@ -94,6 +98,7 @@
           "aurelia-dependency-injection",
           "aurelia-event-aggregator",
           "aurelia-framework",
+          "aurelia-fetch-client",
           "aurelia-history",
           "aurelia-history-browser",
           "aurelia-loader",
@@ -110,10 +115,8 @@
           "aurelia-task-queue",
           "aurelia-templating",
           "aurelia-templating-binding",
-          {
-            "name": "text",
-            "path": "../wwwroot\\scripts/text"
-          },
+          "aurelia-templating-resources",
+          "text",
           {
             "name": "aurelia-templating-resources",
             "path": "../node_modules/aurelia-templating-resources/dist/amd",
@@ -129,11 +132,6 @@
             "path": "../node_modules/aurelia-testing/dist/amd",
             "main": "aurelia-testing",
             "env": "dev"
-          },
-          {
-            "name": "oidc-client",
-            "path": "../node_modules/oidc-client/lib/",
-            "main": "oidc-client"
           }
         ]
       }

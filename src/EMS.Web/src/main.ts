@@ -1,39 +1,21 @@
-import { Aurelia } from 'aurelia-framework'
-import environment from './environment';
-import { Auth } from './auth';
+import { Aurelia } from "aurelia-framework";
+import oidcConfig from "./oidc-config";
 
-//Configure Bluebird Promises.
-//Note: You may want to use environment-specific configuration.
+// Configure Bluebird Promises.
+// Note: You may want to use environment-specific configuration.
 (<any>Promise).config({
   warnings: {
-    wForgottenReturn: false
-  }
+    wForgottenReturn: false,
+  },
 });
 
 export function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration()
-    .feature('resources');
+    .plugin("./open-id/open-id", (callback) => callback(oidcConfig));
 
-  if (environment.debug) {
-    aurelia.use.developmentLogging();
-  }
-  console.log('IM HERE');
-  aurelia.start().then(() => {
-    let auth: Auth = aurelia.container.get(Auth);
-    auth.loadLocalUser().then(user => {
-      if (user) {
-        console.log(user);
-        auth.user = user;
-        aurelia.setRoot();
-      } else {
-        if (aurelia.host.baseURI.indexOf('#id_token') > -1) {
-          console.info('Oidc: is callback');
-          auth.callback();
-        } else {
-          auth.login();
-        }
-      }
-    })
-  });
+  aurelia.use.developmentLogging();
+  aurelia.use.plugin("aurelia-testing");
+
+  aurelia.start().then(() => aurelia.setRoot());
 }
