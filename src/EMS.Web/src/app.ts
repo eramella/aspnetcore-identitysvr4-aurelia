@@ -14,7 +14,7 @@ export class App {
     public configureRouter(routerConfiguration: RouterConfiguration, router: Router) {
 
         // switch from hash (#) to slash (/) navigation
-        routerConfiguration.options.pushState = true;
+        //routerConfiguration.options.pushState = true;
 
         // configure routes
         routerConfiguration.map([

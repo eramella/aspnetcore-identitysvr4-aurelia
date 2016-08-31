@@ -15,7 +15,7 @@ export function configure(aurelia: Aurelia) {
     .plugin("./open-id/open-id", (callback) => callback(oidcConfig));
 
   aurelia.use.developmentLogging();
-  aurelia.use.plugin("aurelia-testing");
+  //aurelia.use.plugin("aurelia-testing");
 
   aurelia.start().then(() => aurelia.setRoot());
 }

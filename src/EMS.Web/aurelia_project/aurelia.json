@@ -50,7 +50,7 @@
       {
         "id": "aspnetcore",
         "displayName": "ASP>NET Core",
-        "output": "wwwwroot\\scripts",
+        "output": "wwwroot\\scripts",
         "baseUrl": "scripts"
       }
     ],
