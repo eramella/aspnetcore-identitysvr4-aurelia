@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EMS.Web.Controllers
 {
-    [Authorize]
+    // [Authorize]
     public class HomeController : Controller
     {
         public IActionResult Index()
         {
-            return Redirect("~/index.html");
+            return View(); //Redirect("~/index.html");
         }
 
         public IActionResult Error()

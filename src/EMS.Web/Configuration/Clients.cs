@@ -20,7 +20,7 @@ namespace EMS.Web.Configuration
                     RequireConsent = false,
                     RedirectUris = new List<string>
                     {
-                        "http://localhost:1861/index.html"
+                        "http://localhost:1861/signin-oidc"
                     },
                     AllowedScopes = new List<string>
                     {

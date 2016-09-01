@@ -99,7 +99,7 @@ namespace EMS.Web
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("as/Home/Error");
             }
 
             app.UseStaticFiles();
@@ -122,8 +122,20 @@ namespace EMS.Web
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    name: "aurelia",
+                    template: "",
+                    defaults: new { controller = "Home", action = "Index" }
+                );
+                routes.MapRoute(
+                    name: "authSvr",
+                    template: "as/{controller=Account}/{action=Login}/{id?}");
+                
+                routes.MapRoute(
+                    name: "deepLink",
+                    template: "{*pathInfo}",
+                    defaults: new { controller = "Home", action = "Index" }
+                );
+                
             });
         }
     }

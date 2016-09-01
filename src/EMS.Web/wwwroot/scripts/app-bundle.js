@@ -16,6 +16,7 @@ define('app',["require", "exports", "aurelia-framework", "./open-id/open-id"], f
             this.openId = openId;
         }
         App.prototype.configureRouter = function (routerConfiguration, router) {
+            routerConfiguration.options.pushState = true;
             routerConfiguration.map([
                 { moduleId: "login", route: ["", "login"] },
             ]);
@@ -132,7 +133,6 @@ define('oidc-config',["require", "exports"], function (require, exports) {
         UserManagerSettings: {
             authority: authority,
             client_id: "ems",
-            post_logout_redirect_uri: host + "/signout-oidc",
             redirect_uri: host + "/index.html",
             response_type: "id_token token",
             scope: "openid profile api.todo",
