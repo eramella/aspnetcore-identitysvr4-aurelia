@@ -99,7 +99,7 @@ namespace EMS.Web
             }
             else
             {
-                app.UseExceptionHandler("as/Home/Error");
+                app.UseExceptionHandler("/Home/Error");
             }
 
             app.UseStaticFiles();
@@ -128,13 +128,12 @@ namespace EMS.Web
                 );
                 routes.MapRoute(
                     name: "authSvr",
-                    template: "as/{controller=Account}/{action=Login}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
                 
-                routes.MapRoute(
-                    name: "deepLink",
-                    template: "{*pathInfo}",
+                routes.MapSpaFallbackRoute(
+                    name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" }
-                );
+                );               
                 
             });
         }

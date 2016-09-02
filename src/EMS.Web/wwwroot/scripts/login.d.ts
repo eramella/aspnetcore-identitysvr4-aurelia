@@ -7,6 +7,7 @@ export declare class Login {
     private resourceServerMessage;
     private isLoggedIn;
     constructor(openId: OpenId, httpClient: HttpClient);
+    private gotoRoute();
     private login();
     private logout();
     private queryResourceServer(serverNum, isPrivate);

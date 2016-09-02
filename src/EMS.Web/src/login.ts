@@ -25,6 +25,10 @@ export class Login {
         });
     }
 
+    private gotoRoute(){
+        
+    }
+
     private login() {
         this.openId.Login();
     }
@@ -58,10 +62,10 @@ export class Login {
                     }
                 })
                 .then((data) => {
-                    this.resourceServerMessage = `${serverNum}: ${data}`;
+                    this.resourceServerMessage = JSON.stringify(data,null,2);
                 })
                 .catch((err) => {
-                    this.resourceServerMessage = `${serverNum}: ${err.message}`;
+                    this.resourceServerMessage = `${err.message}`;
                 });
         });
     }
@@ -72,17 +76,13 @@ export class Login {
         let path: string;
 
         if (window.location.hostname.startsWith("localhost")) {
-            leftPart = serverNum === 1
-                ? "http://localhost:5001"
-                : "http://localhost:5002";
+            leftPart = "http://localhost:1861";
         } else {
-            leftPart = serverNum === 1
-                ? "https://zamboni-resource-01.azurewebsites.net"
-                : "https://zamboni-resource-02.azurewebsites.net";
+            leftPart = "https://myweb.mayweb.net";
         }
 
-        path = isPrivate ? "private" : "public";
+        //path = isPrivate ? "private" : "public";
 
-        return `${leftPart}/api/${path}`;
+        return `${leftPart}/api/Test`;
     }
 }

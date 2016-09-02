@@ -16,7 +16,7 @@ const oidcConfig: OpenIdConfiguration = {
     UserManagerSettings: <UserManagerSettings>{
         authority: authority,
         client_id: "ems",
-        //post_logout_redirect_uri: `${host}/signout-oidc`,
+        post_logout_redirect_uri: `${host}/signout-oidc`,
         redirect_uri: `${host}/signin-oidc`,
         response_type: "id_token token",
         scope: "openid profile api.todo",

@@ -15,10 +15,12 @@ export class App {
 
         // switch from hash (#) to slash (/) navigation
         routerConfiguration.options.pushState = true;
+        routerConfiguration.options.root = '/';
 
         // configure routes
         routerConfiguration.map([
-            { moduleId: "login", route: ["", "login"] },
+            { route: ["", "login"], name: "Login", moduleId: "login" },
+            { route: "dashboard", name: "Dashboard", moduleId: "dashboard" },
         ]);
 
         this.openId.Configure(routerConfiguration);

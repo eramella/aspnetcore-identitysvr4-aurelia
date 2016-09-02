@@ -1,5 +1,6 @@
 define('text!app.html', ['module'], function(module) { module.exports = "<template>\r\n  <router-view></router-view>\r\n</template>"; });
-define('text!login.html', ['module'], function(module) { module.exports = "<template>\r\n  <style type=\"text/css\">\r\n    pre {\r\n      background: #eee;\r\n      padding: 1em;\r\n      overflow: auto;\r\n    }\r\n  </style>\r\n\r\n  <p>\r\n    <button show.bind='!isLoggedIn' click.trigger=\"login()\">Log in</button>\r\n  </p>\r\n  <p>\r\n    <button click.trigger=\"queryResourceServer(01, true)\">Resource Server 01 - Private</button>\r\n    <button click.trigger=\"queryResourceServer(01, false)\">Resource Server 01 - Public</button>\r\n    <button click.trigger=\"queryResourceServer(02, true)\">Resource Server 02 - Private</button>\r\n    <button click.trigger=\"queryResourceServer(02, false)\">Resource Server 02 - Public</button>\r\n    <pre>${resourceServerMessage}</pre>\r\n  </p>\r\n  <div show.bind=\"isLoggedIn\">\r\n    <p>\r\n      <button click.trigger=\"logout()\">Log out</button>\r\n      <pre>${authorizationServerMessage}</pre>\r\n    </p>\r\n  </div>\r\n</template>"; });
+define('text!dashboard.html', ['module'], function(module) { module.exports = "<template>  \r\n    <h1>This is Dashboard</h1>\r\n</template>"; });
+define('text!login.html', ['module'], function(module) { module.exports = "<template>\r\n  <style type=\"text/css\">\r\n    pre {\r\n      background: #eee;\r\n      padding: 1em;\r\n      overflow: auto;\r\n    }\r\n  </style>\r\n\r\n  <p>\r\n    <button show.bind='!isLoggedIn' click.trigger=\"login()\">Log in</button>\r\n  </p>\r\n  <p>\r\n    <button click.trigger=\"queryResourceServer(01, true)\">Get User Info</button>\r\n   <pre>${resourceServerMessage}</pre>\r\n  </p>\r\n  <div show.bind=\"isLoggedIn\">\r\n    <p>\r\n      <button click.trigger=\"logout()\">Log out</button>\r\n      <pre>${authorizationServerMessage}</pre>\r\n    </p>\r\n  </div>\r\n</template>"; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -17,8 +18,10 @@ define('app',["require", "exports", "aurelia-framework", "./open-id/open-id"], f
         }
         App.prototype.configureRouter = function (routerConfiguration, router) {
             routerConfiguration.options.pushState = true;
+            routerConfiguration.options.root = '/';
             routerConfiguration.map([
-                { moduleId: "login", route: ["", "login"] },
+                { route: ["", "login"], name: "Login", moduleId: "login" },
+                { route: "dashboard", name: "Dashboard", moduleId: "dashboard" },
             ]);
             this.openId.Configure(routerConfiguration);
         };
@@ -29,6 +32,16 @@ define('app',["require", "exports", "aurelia-framework", "./open-id/open-id"], f
         return App;
     }());
     exports.App = App;
+});
+
+define('dashboard',["require", "exports"], function (require, exports) {
+    "use strict";
+    var Dashboard = (function () {
+        function Dashboard() {
+        }
+        return Dashboard;
+    }());
+    exports.Dashboard = Dashboard;
 });
 
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -59,6 +72,8 @@ define('login',["require", "exports", "aurelia-framework", "./open-id/open-id", 
                 console.log("login constructor done");
             });
         }
+        Login.prototype.gotoRoute = function () {
+        };
         Login.prototype.login = function () {
             this.openId.Login();
         };
@@ -86,10 +101,10 @@ define('login',["require", "exports", "aurelia-framework", "./open-id/open-id", 
                     }
                 })
                     .then(function (data) {
-                    _this.resourceServerMessage = serverNum + ": " + data;
+                    _this.resourceServerMessage = JSON.stringify(data, null, 2);
                 })
                     .catch(function (err) {
-                    _this.resourceServerMessage = serverNum + ": " + err.message;
+                    _this.resourceServerMessage = "" + err.message;
                 });
             });
         };
@@ -97,17 +112,12 @@ define('login',["require", "exports", "aurelia-framework", "./open-id/open-id", 
             var leftPart;
             var path;
             if (window.location.hostname.startsWith("localhost")) {
-                leftPart = serverNum === 1
-                    ? "http://localhost:5001"
-                    : "http://localhost:5002";
+                leftPart = "http://localhost:1861";
             }
             else {
-                leftPart = serverNum === 1
-                    ? "https://zamboni-resource-01.azurewebsites.net"
-                    : "https://zamboni-resource-02.azurewebsites.net";
+                leftPart = "https://myweb.mayweb.net";
             }
-            path = isPrivate ? "private" : "public";
-            return leftPart + "/api/" + path;
+            return leftPart + "/api/Test";
         };
         Login = __decorate([
             aurelia_framework_1.autoinject, 
@@ -133,7 +143,8 @@ define('oidc-config',["require", "exports"], function (require, exports) {
         UserManagerSettings: {
             authority: authority,
             client_id: "ems",
-            redirect_uri: host + "/index.html",
+            post_logout_redirect_uri: host + "/signout-oidc",
+            redirect_uri: host + "/signin-oidc",
             response_type: "id_token token",
             scope: "openid profile api.todo",
             filterProtocolClaims: true,
