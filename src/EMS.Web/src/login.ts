@@ -1,6 +1,7 @@
 import { autoinject } from "aurelia-framework";
 import { OpenId, User } from "./open-id/open-id";
 import { HttpClient } from "aurelia-fetch-client";
+import { Router } from "aurelia-router";
 
 @autoinject
 export class Login {
@@ -8,8 +9,10 @@ export class Login {
     private authorizationServerMessage: string;
     private resourceServerMessage: string;
     private isLoggedIn: boolean = false;
+    private router: Router;
 
-    constructor(private openId: OpenId, private httpClient: HttpClient) {
+    constructor(private openId: OpenId, private httpClient: HttpClient, router: Router) {
+        this.router = router;
         this.openId.UserManager.getUser().then((user: User) => {
 
             console.log(user);
@@ -22,11 +25,8 @@ export class Login {
             this.authorizationServerMessage = JSON.stringify(user, null, 4);
 
             console.log("login constructor done");
+            this.router.navigate('dashboard');
         });
-    }
-
-    private gotoRoute(){
-        
     }
 
     private login() {

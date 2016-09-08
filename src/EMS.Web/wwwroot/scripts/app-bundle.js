@@ -53,14 +53,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-define('login',["require", "exports", "aurelia-framework", "./open-id/open-id", "aurelia-fetch-client"], function (require, exports, aurelia_framework_1, open_id_1, aurelia_fetch_client_1) {
+define('login',["require", "exports", "aurelia-framework", "./open-id/open-id", "aurelia-fetch-client", "aurelia-router"], function (require, exports, aurelia_framework_1, open_id_1, aurelia_fetch_client_1, aurelia_router_1) {
     "use strict";
     var Login = (function () {
-        function Login(openId, httpClient) {
+        function Login(openId, httpClient, router) {
             var _this = this;
             this.openId = openId;
             this.httpClient = httpClient;
             this.isLoggedIn = false;
+            this.router = router;
             this.openId.UserManager.getUser().then(function (user) {
                 console.log(user);
                 if (user === null || user === undefined) {
@@ -70,10 +71,9 @@ define('login',["require", "exports", "aurelia-framework", "./open-id/open-id", 
                 _this.isLoggedIn = true;
                 _this.authorizationServerMessage = JSON.stringify(user, null, 4);
                 console.log("login constructor done");
+                _this.router.navigate('dashboard');
             });
         }
-        Login.prototype.gotoRoute = function () {
-        };
         Login.prototype.login = function () {
             this.openId.Login();
         };
@@ -121,7 +121,7 @@ define('login',["require", "exports", "aurelia-framework", "./open-id/open-id", 
         };
         Login = __decorate([
             aurelia_framework_1.autoinject, 
-            __metadata('design:paramtypes', [open_id_1.OpenId, aurelia_fetch_client_1.HttpClient])
+            __metadata('design:paramtypes', [open_id_1.OpenId, aurelia_fetch_client_1.HttpClient, aurelia_router_1.Router])
         ], Login);
         return Login;
     }());
